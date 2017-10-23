@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.Value;
 
 @Value
-public final class GreetingMessage {
+public class UserGreeting {
+    @NonNull String id;
     @NonNull String message;
 }

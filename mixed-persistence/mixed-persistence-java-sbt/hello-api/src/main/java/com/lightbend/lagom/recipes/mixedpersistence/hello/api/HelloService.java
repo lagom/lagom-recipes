@@ -1,19 +1,14 @@
-/*
- * 
- */
 package com.lightbend.lagom.recipes.mixedpersistence.hello.api;
-
-import static com.lightbend.lagom.javadsl.api.Service.named;
-import static com.lightbend.lagom.javadsl.api.Service.pathCall;
-import static com.lightbend.lagom.javadsl.api.Service.topic;
 
 import akka.Done;
 import akka.NotUsed;
 import com.lightbend.lagom.javadsl.api.Descriptor;
 import com.lightbend.lagom.javadsl.api.Service;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
-import com.lightbend.lagom.javadsl.api.broker.Topic;
-import com.lightbend.lagom.javadsl.api.broker.kafka.KafkaProperties;
+import org.pcollections.PSequence;
+
+import static com.lightbend.lagom.javadsl.api.Service.named;
+import static com.lightbend.lagom.javadsl.api.Service.pathCall;
 
 /**
  * The hello service interface.
@@ -23,37 +18,52 @@ import com.lightbend.lagom.javadsl.api.broker.kafka.KafkaProperties;
  */
 public interface HelloService extends Service {
 
-  /**
-   * Example: curl http://localhost:9000/api/hello/Alice
-   */
-  ServiceCall<NotUsed, String> hello(String id);
+    /**
+     * Example: curl http://localhost:9000/api/hello/Alice
+     */
+    ServiceCall<NotUsed, String> hello(String id);
 
-  /**
-   * Example: curl -H "Content-Type: application/json" -X POST -d '{"message":
-   * "Hi"}' http://localhost:9000/api/hello/Alice
-   */
-  ServiceCall<GreetingMessage, Done> useGreeting(String id);
+    /**
+     * Examples:
+     * curl -H "Content-Type: application/json" -X POST -d '{"message": "Hi"}' http://localhost:9000/api/hello/Alice
+     * curl -H "Content-Type: application/json" -X POST -d '{"message": "Good day"}' http://localhost:9000/api/hello/Bob
+     * curl -H "Content-Type: application/json" -X POST -d '{"message": "Hi"}' http://localhost:9000/api/hello/Carol
+     * curl -H "Content-Type: application/json" -X POST -d '{"message": "Howdy"}' http://localhost:9000/api/hello/David
+     */
+    ServiceCall<GreetingMessage, Done> useGreeting(String id);
 
-  /**
-   * This gets published to Kafka.
-   */
-  Topic<HelloEvent> helloEvents();
+    /**
+     * Example: curl http://localhost:9000/api/greetings
+     * Response (pretty-printed):
+     * <pre>
+     * [
+     *   {
+     *     "id": "Alice",
+     *     "message": "Hi"
+     *   },
+     *   {
+     *     "id": "Bob",
+     *     "message": "Good day"
+     *   },
+     *   {
+     *     "id": "Carol",
+     *     "message": "Hi"
+     *   },
+     *   {
+     *     "id": "David",
+     *     "message": "Howdy"
+     *   }
+     * ]
+     * </pre>
+     */
+    ServiceCall<NotUsed, PSequence<UserGreeting>> allGreetings();
 
-  @Override
-  default Descriptor descriptor() {
-    // @formatter:off
-    return named("hello").withCalls(
-        pathCall("/api/hello/:id",  this::hello),
-        pathCall("/api/hello/:id", this::useGreeting)
-      ).withTopics(
-        topic("hello-events", this::helloEvents)
-          // Kafka partitions messages, messages within the same partition will
-          // be delivered in order, to ensure that all messages for the same user
-          // go to the same partition (and hence are delivered in order with respect
-          // to that user), we configure a partition key strategy that extracts the
-          // name as the partition key.
-          .withProperty(KafkaProperties.partitionKeyStrategy(), HelloEvent::getName)
-      ).withAutoAcl(true);
-    // @formatter:on
-  }
+    @Override
+    default Descriptor descriptor() {
+        return named("hello").withCalls(
+                pathCall("/api/hello/:id", this::hello),
+                pathCall("/api/hello/:id", this::useGreeting),
+                pathCall("/api/greetings", this::allGreetings)
+        ).withAutoAcl(true);
+    }
 }

@@ -5,7 +5,7 @@ version in ThisBuild := "1.0-SNAPSHOT"
 scalaVersion in ThisBuild := "2.11.8"
 
 lazy val `hello` = (project in file("."))
-  .aggregate(`hello-api`, `hello-impl`, `hello-stream-api`, `hello-stream-impl`)
+  .aggregate(`hello-api`, `hello-impl`)
 
 lazy val `hello-api` = (project in file("hello-api"))
   .settings(common: _*)
@@ -22,33 +22,15 @@ lazy val `hello-impl` = (project in file("hello-impl"))
   .settings(
     libraryDependencies ++= Seq(
       lagomJavadslPersistenceCassandra,
+      lagomJavadslPersistenceJpa,
       lagomJavadslKafkaBroker,
       lagomJavadslTestKit,
-      lombok
+      lombok,
+      "org.hibernate" % "hibernate-core" % "5.2.12.Final"
     )
   )
   .settings(lagomForkedTestSettings: _*)
   .dependsOn(`hello-api`)
-
-lazy val `hello-stream-api` = (project in file("hello-stream-api"))
-  .settings(common: _*)
-  .settings(
-    libraryDependencies ++= Seq(
-      lagomJavadslApi
-    )
-  )
-
-lazy val `hello-stream-impl` = (project in file("hello-stream-impl"))
-  .enablePlugins(LagomJava)
-  .settings(common: _*)
-  .settings(
-    libraryDependencies ++= Seq(
-      lagomJavadslPersistenceCassandra,
-      lagomJavadslKafkaClient,
-      lagomJavadslTestKit
-    )
-  )
-  .dependsOn(`hello-stream-api`, `hello-api`)
 
 val lombok = "org.projectlombok" % "lombok" % "1.16.10"
 
