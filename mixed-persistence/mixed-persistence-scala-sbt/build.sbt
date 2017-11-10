@@ -7,7 +7,7 @@ scalaVersion in ThisBuild := "2.11.8"
 val macwire = "com.softwaremill.macwire" %% "macros" % "2.2.5" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.1" % Test
 
-lazy val `hello` = (project in file("."))
+lazy val `mixed-persistence-scala-sbt` = (project in file("."))
   .aggregate(`hello-api`, `hello-impl`)
 
 lazy val `hello-api` = (project in file("hello-api"))
@@ -31,3 +31,4 @@ lazy val `hello-impl` = (project in file("hello-impl"))
   .settings(lagomForkedTestSettings: _*)
   .dependsOn(`hello-api`)
 
+lagomKafkaEnabled in ThisBuild := false

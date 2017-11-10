@@ -73,7 +73,6 @@ class HelloEntity extends PersistentEntity {
         // We simply update the current state to use the greeting message from
         // the event.
         HelloState(newMessage, LocalDateTime.now().toString)
-
     }
   }
 }
