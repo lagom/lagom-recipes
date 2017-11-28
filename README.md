@@ -13,7 +13,7 @@ To download and run these samples you will need:
 3. a [Java Development Kit](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 4. a code editor such as ([IntelliJ](https://www.jetbrains.com/idea/), [Eclipse](https://www.eclipse.org/downloads/), [Atom](https://atom.io/),... )
 
-### Using these samples
+### Using these examples
 
 If you want to run a specific sample you will have to clone the whole repository and then navigate to a specific application folder. For example:
 
