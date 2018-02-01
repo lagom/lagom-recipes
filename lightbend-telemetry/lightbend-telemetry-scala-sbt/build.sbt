@@ -18,9 +18,12 @@ lazy val `endpoint-metrics-api` = (project in file("endpoint-metrics-api"))
   )
 
 lazy val `endpoint-metrics-impl` = (project in file("endpoint-metrics-impl"))
-  .enablePlugins(LagomScala)
+  .enablePlugins(LagomScala, Cinnamon)
   .settings(
     libraryDependencies ++= Seq(
+      Cinnamon.library.cinnamonCHMetrics,
+      Cinnamon.library.cinnamonPlay,
+
       lagomScaladslTestKit,
       macwire,
       scalaTest
