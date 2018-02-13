@@ -1,5 +1,7 @@
 package com.example.fileupload.api
 
+import akka.NotUsed
+import com.lightbend.lagom.scaladsl.api.transport.Method
 import com.lightbend.lagom.scaladsl.api.{ Service, ServiceCall }
 
 trait FileuploadService extends Service {
@@ -10,11 +12,20 @@ trait FileuploadService extends Service {
     */
   def uppercaseEcho(): ServiceCall[String, String]
 
+  def uploadFile(): ServiceCall[NotUsed, String]
+
   override final def descriptor = {
     import Service._
     named("fileupload")
       .withCalls(
-        pathCall("/api/echo", uppercaseEcho _)
+        pathCall("/api/echo", uppercaseEcho _),
+
+        // Uploading a file using multi-part forms require using POST. Because we don't want Lagom
+        // to parse the payload the incoming type of uploadFile() is `NotUsed` but that has a problem.
+        // Lagom will map all ServiceCall[NotUsed, ...] to Method.GET unless otherwise specified. Therefore
+        // we must use a `restCall(Method.POST,...)` when uploading a file.
+        restCall(Method.POST, "/api/files", uploadFile _)
+
       )
       .withAutoAcl(true)
   }
