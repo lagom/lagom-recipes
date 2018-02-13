@@ -20,10 +20,10 @@ trait FileuploadService extends Service {
       .withCalls(
         pathCall("/api/echo", uppercaseEcho _),
 
-        // Uploading a file using multi-part forms require using POST. Because we don't want Lagom
-        // to parse the payload the incoming type of uploadFile() is `NotUsed` but that has a problem.
-        // Lagom will map all ServiceCall[NotUsed, ...] to Method.GET unless otherwise specified. Therefore
-        // we must use a `restCall(Method.POST,...)` when uploading a file.
+        // Uploading a file using multi-part forms requires using POST. Because we don't want Lagom
+        // to parse the payload of the request, the incoming type of uploadFile() is `NotUsed`. That
+        // is a problem: Lagom will map all `ServiceCall[NotUsed, ...]` to Method.GET unless
+        // otherwise specified. Therefore we must use a `restCall(Method.POST,...)` when uploading a file.
         restCall(Method.POST, "/api/files", uploadFile _)
 
       )

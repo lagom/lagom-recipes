@@ -39,7 +39,7 @@ class FileuploadServiceImpl(
       //
       // Play provides a varied set of body parsers. In our case we need 'multipartFormData'
       // but might also use 'json', 'raw', .... We complete the build of the bodyParser providing
-      // the fileHandler we created above.
+      // the fileHandler we created below.
       val bodyParser: BodyParser[MultipartFormData[FilePath]] = playBodyParsers.multipartFormData(fileHandler)
 
       // (2) Create Play's Action.
@@ -77,9 +77,10 @@ class FileuploadServiceImpl(
 
   // A fileHandler will build an Accumulator for each FileInfo in the request.
   // Accumulator is Play's abstraction over Akka's Sink. The Accumulator is
-  // converting a ByteString of each File in the multipart request into a FilePart[File]
+  // converting a ByteString of each FileInfo in the multipart request into a FilePart[FilePath]
   // that contains the metadata once the bytes have moved from the request into it's
-  // final storage.
+  // final storage. FilePath is a very simple case class we added below. FilePath wraps
+  // the java.io.File.
   private def fileHandler(fileInfo: FileInfo): Accumulator[ByteString, FilePart[FilePath]] = {
 
     val file = tempFile()
@@ -87,7 +88,7 @@ class FileuploadServiceImpl(
     // (1.1) Create a Sink
     // This Sink is the key aspect of the recipe. This example uses a Akka Streams FileIO
     // Sink that stores bytes into a File, but you could use a Sink for S3, or a Sink
-    // to a Blob on your preferred DB or...
+    // to a Blob on your preferred DB or ...
     val sink: Sink[ByteString, Future[IOResult]] = FileIO.toPath(file.toPath)
 
     // (1.2) Create a Play's Accumulator around the Sink.
