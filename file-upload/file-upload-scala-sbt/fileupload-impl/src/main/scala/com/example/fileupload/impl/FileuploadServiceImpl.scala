@@ -38,7 +38,7 @@ class FileuploadServiceImpl(
       // (1) Create a multi-part body parser with the Accumulator (see the implementation of 'fileHandler()' below)
       //
       // Play provides a varied set of body parsers. In our case we need 'multipartFormData'
-      // but might also use 'json', 'raw', .... We complete the build of the bodyParser providing
+      // but might also use 'json', 'raw', ... . We complete the build of the bodyParser providing
       // the fileHandler we created below.
       val bodyParser: BodyParser[MultipartFormData[FilePath]] = playBodyParsers.multipartFormData(fileHandler)
 
@@ -60,8 +60,9 @@ class FileuploadServiceImpl(
       actionBuilder.async(bodyParser)(requestHandling(callback))
   }
 
-  // (2.extra) Using the callback provided by the lagom framework we can implement a
-  // our logic using a regular Lagom ServiceCall.
+  // (2.extra) Using the callback provided by the lagom framework we can implement
+  // our logic using a regular Lagom ServiceCall. The provided `request` will contain the
+  // information generated in the custom body parser (in our case a `FilePath`).
   private def requestHandling(
                                callback: ServiceCall[NotUsed, String] => EssentialAction
                              )(

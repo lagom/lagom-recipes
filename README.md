@@ -11,7 +11,7 @@ To download and run these examples you will need:
 1. a [git](https://git-scm.com/downloads) client
 2. [sbt](http://www.scala-sbt.org/download.html) or [Maven](https://maven.apache.org/install.html) depending on the example.
 3. a [Java Development Kit](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-4. a code editor such as ([IntelliJ](https://www.jetbrains.com/idea/), [Eclipse](https://www.eclipse.org/downloads/), [Atom](https://atom.io/),... )
+4. a code editor (such as [IntelliJ](https://www.jetbrains.com/idea/), [Eclipse](https://www.eclipse.org/downloads/), [Atom](https://atom.io/),... )
 
 ### Using these examples
 
