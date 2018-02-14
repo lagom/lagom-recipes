@@ -39,6 +39,7 @@ This recipe doesn't go in detail into all the features Play provides to handle f
 * [Choosing a Body parser / Max content Length](https://www.playframework.com/documentation/2.6.x/ScalaBodyParsers#Max-content-length)
 * [Handling File Upload](https://www.playframework.com/documentation/2.6.x/ScalaFileUpload)
 
+You may also be interested in the [Play-specific example](https://github.com/playframework/play-scala-fileupload-example) on handling file uploads.
 
 ## Know more
 
