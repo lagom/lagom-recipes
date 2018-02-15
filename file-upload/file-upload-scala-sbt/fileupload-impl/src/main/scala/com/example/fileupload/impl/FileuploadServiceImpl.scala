@@ -71,7 +71,7 @@ class FileuploadServiceImpl(
     val wrappedAction: EssentialAction = callback(
       ServiceCall { notused =>
         val files: Seq[FilePart[FilePath]] = request.body.files
-        Future.successful(files.mkString("Uploaded[", ", ", "]"))
+        Future.successful(files.map{_.ref.absolutePath}mkString("Uploaded[", ", ", "]"))
       })
     wrappedAction(request).run()
   }
