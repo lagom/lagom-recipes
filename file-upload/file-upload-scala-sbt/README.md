@@ -50,7 +50,7 @@ To complete each of the previous steps we have to edit one or many files:
 
 1. Add a new Play controller
   * first we can create a new controller based on [Play's Upload File example](https://github.com/playframework/play-scala-fileupload-example/blob/2.6.x/app/controllers/HomeController.scala#L26)
-2. reate a new `routes` file
+2. create a new `routes` file
   * we then create a file named `routes` in `./fileupload-impl/src/main/resources`. You can learn more about that file and it's syntax on the [docs](https://www.playframework.com/documentation/2.6.x/ScalaRouting). In our case we want the `routes` file to contain only two entries:
 
             POST   /api/files  com.example.play.controllers.FileUploadController.uploadFile()
