@@ -18,7 +18,11 @@ lazy val `fileupload-api` = (project in file("fileupload-api"))
   )
 
 lazy val `fileupload-impl` = (project in file("fileupload-impl"))
-  .enablePlugins(LagomScala)
+  .enablePlugins(LagomScala, PlayScala)
+  .disablePlugins(PlayLayoutPlugin)
+  .settings(
+    routesGenerator := InjectedRoutesGenerator
+  )
   .settings(
     libraryDependencies ++= Seq(
       lagomScaladslTestKit,

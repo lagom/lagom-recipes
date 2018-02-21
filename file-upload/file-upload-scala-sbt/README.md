@@ -1,33 +1,8 @@
 # Lagom Recipe: How to upload a file
 
-It is not trivial how to handle file uploads in Lagom, Lagom is an abstraction over the transport and it doesn't include direct support for `mulipart-form-data`. 
+Lagom is designed with RPC in mind and abstracts from the transport used to exchange messages between services but it defaults to an HTTP/Json transport. File upload is a feature often requested that requires exploiting the power of one of Lagom's building blocks: the Play Framework.
 
-This recipe demonstrates how to fallback from [Lagom's `ServiceCall`](https://www.lagomframework.com/documentation/1.4.x/scala/ServiceImplementation.html#Implementing-services) implementation to it's building block: [Play Actions](https://www.playframework.com/documentation/2.6.x/ScalaActions#What-is-an-Action?). The final solution uses an [asynchronous Action](https://www.playframework.com/documentation/2.6.x/ScalaAsync#Make-controllers-asynchronous) so we can control what execution context is used to run the file handling logic.
-
-While this recipe focuses on solving the problem of handling file uploads you can learn from the solution presented here to fallback to Play Actions for other edge cases not supported by Lagom out of the box.
-
-## Code details
-
-The changes required on a Lagom service to handle File upload are:
-
-* in the Service Descriptor at [FileuploadService](./fileupload-api/src/main/scala/com/example/fileupload/api/FileuploadService.scala) we add an endpoint explicitly stating it must be a `POST`. This is necessary because the `ServiceCall[T,Q]` for the file upload method doesn't get any payload on the request and LAgom would default to `GET`. See the inline comments on the sources for more details.
-* in the Service implementation at [FileuploadServiceImpl](./fileupload-impl/src/main/scala/com/example/fileupload/impl/FileuploadServiceImpl.scala) the implementation uses a [`PlayServiceCall`](https://www.lagomframework.com/documentation/1.4.x/scala/api/com/lightbend/lagom/scaladsl/server/PlayServiceCall.html) to overwrite Lagom's default bridge between Play's runtime and Lagom's `ServiceCall`
-
-See the sources of [FileuploadService](./fileupload-api/src/main/scala/com/example/fileupload/api/FileuploadService.scala) and [FileuploadServiceImpl](./fileupload-impl/src/main/scala/com/example/fileupload/impl/FileuploadServiceImpl.scala) for more detailed, in-place comments. 
-
-
-This recipe is also interesting as a demonstration on how to use a non-Lagom client to execute low-level HTTP requests. To test the implemented service there's a test in [FileuploadServiceSpec](./fileupload-impl/src/test/scala/com/example/fileupload/impl/FileuploadServiceSpec.scala) which takes `sampleFile.txt` and uploads it using play-WS. The server response contains the absolute path of the stored file so the test can assert the upload completed successfully and the stored bytes are equal to the uploaded bytes.
-
-
-Here we don't go in detail into all the features Play provides to handle file upload in neither the client or the server sides. For example, this recipe uses default values that will limit the size of the uploaded file. 
-
-To know more about tuning file upload in Play see:
-
-* [Writing a custom body parser](https://www.playframework.com/documentation/2.6.x/ScalaBodyParsers#Writing-a-custom-body-parser)
-* [Choosing a Body parser / Max content Length](https://www.playframework.com/documentation/2.6.x/ScalaBodyParsers#Max-content-length)
-* [Handling File Upload](https://www.playframework.com/documentation/2.6.x/ScalaFileUpload)
-
-You may also be interested in the [Play-specific example](https://github.com/playframework/play-scala-fileupload-example) on handling file uploads.
+This recipe demonstrates how to add a side-car `Router` that is pure Play code to handle file uploads next to your Lagom `Service`'s. This recipe is inspired on Play's example application [Play Scala File Upload Example](https://github.com/playframework/play-scala-fileupload-example/tree/2.6.x) that is part of [Play's great collection of examples](https://www.playframework.com/download#examples).
 
 ## Testing the recipe
 
@@ -35,7 +10,7 @@ You may also be interested in the [Play-specific example](https://github.com/pla
 
 You can test this recipe using the provided tests:
 
-```
+```bash
 sbt test
 ```
 
@@ -45,18 +20,65 @@ You can also test this recipe manually using 2 separate terminals.
 
 On one terminal start the service:
 
-```
+```bash
 sbt runAll
 ```
 
 On a separate terminal, use `curl` to POST a file (in this example we're posting `build.sbt`:
 
-```
+```bash
 curl -X POST -F "data=@build.sbt" -v  http://localhost:9000/api/files
 ```
 
+You can also exercise a regular Lagom endpoint that coexists with the file upload controller:
 
-## Know more
+```bash
+curl -X POST -H "Content-Type: text/plain" -d  "hello world" http://localhost:9000/api/echo
+```
+
+
+
+## Code details
+
+The changes required on a Lagom service to handle File upload are:
+
+1. Add a new [Play controller](https://www.playframework.com/documentation/2.6.x/ScalaActions) named `FileUploadController`
+2. Create a new [`routes` file](https://www.playframework.com/documentation/2.6.x/ScalaRouting) and add a new route pointing to our side-car `FileUploadController` and a default route pointing to the Lagom `Router`
+3. Fall back to Play's routing instead of using Lagom's default `Router`
+
+To complete each of the previous steps we have to edit one or many files:
+
+1. Add a new Play controller
+  * first we can create a new controller based on [Play's Upload File example](https://github.com/playframework/play-scala-fileupload-example/blob/2.6.x/app/controllers/HomeController.scala#L26)
+2. reate a new `routes` file
+  * we then create a file named `routes` in `./fileupload-impl/src/main/resources`. You can learn more about that file and it's syntax on the [docs](https://www.playframework.com/documentation/2.6.x/ScalaRouting). In our case we want the `routes` file to contain only two entries:
+
+            POST   /api/files  com.example.play.controllers.FileUploadController.uploadFile()
+            ->     /           com.lightbend.lagom.scaladsl.server.LagomServiceRouter
+
+3. Fall back to Play's routing instead of using Lagom's default `Router`
+  * in the `build.sbt` project definiton we have to make a few changes. All changes need to be applied on the project definition of the implementation module. First we enable the [`PlayScala`](./fileupload-impl/build.sbt#L21) plugin that will let us use `routes`-based routing. Then, we're configuring Play to use the [`Injected routes generator`](https://www.playframework.com/documentation/2.6.x/ScalaDependencyInjection#Injected-routes-generator). Finally, we  need to [disable](./fileupload-impl/build.sbt#L22) the `PlayLayoutPlugin` because we're using `sbt`'s default project structure instead of [Play's project structure](https://www.playframework.com/documentation/2.6.x/Anatomy). The last step is only required because we want to maintain Lagom's project structure.
+  * next, in [`FileUploadApplication`](./fileupload-impl/src/main/scala/com/example/fileupload/impl/FileUploadLoader.scala#L50) we have to `override` the `router` and create a new instance of the `Routes` router that the `PlayScala` sbt plugin will create for us from the `src/main/resources/routes` file we created above. This class `Routes` is created on the fly by the `PlayScala` plugin considering the `InjectedRoutesGenerator` setting in `build.sbt`. Note how it receives three arguments: an error handler, the `FileUploadController` instance and the Lagom Router.
+
+
+**Bonus: ACLs** (optional) you can setup the Service ACLs manually to add the `/api/files` endpoint on the ACLs' list so that your Service Gateway can reverse proxy external requests into the File Upload service.
+
+ * In [FileUploadService](./fileupload-api/src/main/scala/com/example/fileupload/api/FileUploadService.scala) the Lagom Descriptor is built. There we added a dummy endpoint to demonstrate how the `FileUploadController` doesn't interfere with regular Service Implementations. The important detail on this `Service.Descriptor` is that a `ServiceAcl` for `/api/files` is added manually to the `Service.Descriptor`. 
+
+**Tests:** The recipee includes a couple of tests in `./fileupload-impl/src/test/scala/` where you an see how the test code doesn't change when the lay Controller side-car is added to the `Application`. Note though, how the tests for the file upload can't use the Lagom Client and use a plain `PlayWS` client to have complete control over the HTTP request built to [upload the file](https://www.playframework.com/documentation/2.6.x/ScalaFileUpload).
+
+## To know more
+
+In this recipe we don't go in detail into all the features Play provides to handle file upload in neither the client (tests) or the server sides. For example, this recipe uses default values that will limit the size of the uploaded file. 
+
+To know more about tuning file upload in Play see:
+
+* [Writing a custom body parser](https://www.playframework.com/documentation/2.6.x/ScalaBodyParsers#Writing-a-custom-body-parser)
+* [Choosing a Body parser / Max content Length](https://www.playframework.com/documentation/2.6.x/ScalaBodyParsers#Max-content-length)
+* [Handling File Upload](https://www.playframework.com/documentation/2.6.x/ScalaFileUpload)
+
+You may also be interested in the [Play-specific example](https://github.com/playframework/play-scala-fileupload-example) on handling file uploads.
+
 
 Other recipes that mix Lagom and Play features:
 

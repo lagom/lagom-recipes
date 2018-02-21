@@ -1,10 +1,14 @@
 package com.example.fileupload.api
 
-import akka.NotUsed
-import com.lightbend.lagom.scaladsl.api.transport.Method
-import com.lightbend.lagom.scaladsl.api.{ Service, ServiceCall }
+import com.lightbend.lagom.scaladsl.api.{ Service, ServiceAcl, ServiceCall }
 
-trait FileuploadService extends Service {
+/**
+  * This Service represents your usual Lagom code. You will have many call heres.
+  * The particularity of this file resides on the ACLs declaration: we are manually
+  * creating the list of ACLs to include `/api/files` which is not a call handled
+  * by the Lagom Router but still a Call available in the FileUpload Application.
+  */
+trait FileUploadService extends Service {
 
   /**
     * Invoke using:
@@ -12,21 +16,15 @@ trait FileuploadService extends Service {
     */
   def uppercaseEcho(): ServiceCall[String, String]
 
-  def uploadFile(): ServiceCall[NotUsed, String]
-
   override final def descriptor = {
     import Service._
     named("fileupload")
       .withCalls(
-        pathCall("/api/echo", uppercaseEcho _),
-
-        // Uploading a file using multi-part forms requires using POST. Because we don't want Lagom
-        // to parse the payload of the request, the incoming type of uploadFile() is `NotUsed`. That
-        // is a problem: Lagom will map all `ServiceCall[NotUsed, ...]` to Method.GET unless
-        // otherwise specified. Therefore we must use a `restCall(Method.POST,...)` when uploading a file.
-        restCall(Method.POST, "/api/files", uploadFile _)
-
+        pathCall("/api/echo", uppercaseEcho _)
       )
-      .withAutoAcl(true)
+      .withAcls(
+        ServiceAcl(pathRegex = Some("/api/echo")),
+        ServiceAcl(pathRegex = Some("/api/files"))
+      )
   }
 }

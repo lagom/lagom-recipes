@@ -10,17 +10,17 @@ import org.scalatest.{ AsyncWordSpec, BeforeAndAfterAll, Matchers }
 import play.api.libs.ws.WSClient
 import play.api.mvc.MultipartFormData.{ DataPart, FilePart }
 
-class FileuploadServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterAll {
+class FileUploadServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterAll {
 
   var ws: WSClient = null
 
   private val server = ServiceTest.startServer(ServiceTest.defaultSetup) { ctx =>
-    new FileuploadApplication(ctx) with LocalServiceLocator {
+    new FileUploadApplication(ctx) with LocalServiceLocator {
       ws = wsClient
     }
   }
 
-  val client = server.serviceClient.implement[FileuploadService]
+  val client = server.serviceClient.implement[FileUploadService]
 
   override protected def afterAll() = server.stop()
 
