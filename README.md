@@ -29,4 +29,4 @@ Each example includes specific instructions in it's `README.md` file on how to r
 * How do I use RDBMS read-sides with Cassandra write-sides? ([mixed persistence in java](mixed-persistence/mixed-persistence-java-sbt/README.md) or [mixed persistence in scala](mixed-persistence/mixed-persistence-scala-sbt/README.md))
 * How to create a stateless service in Lagom for Java that uses [Play's Internationalization Support](i18n/hello-i18n-java-mvn/README.md).
 * How do I manipulate Headers and Status Codes and test those cases?([HTTP header handling](./http-header-handling/http-header-handling-java-sbt/README.md))
-* How do I handle `multipart/form-data` file uploads??(in [`scaladsl`](./file-upload/file-upload-scala-sbt/README.md))
+* How do I handle `multipart/form-data` file uploads? ([Scala example](./file-upload/file-upload-scala-sbt/README.md))
