@@ -13,17 +13,17 @@ public class DemoServiceImpl implements DemoService {
     
     private Repository repository;
     
-    private CircuitBreakersPanel circuitBreaker;
+    private CircuitBreakersPanel circuitBreakerPanel;
     
     @Inject
-    public DemoServiceImpl(Repository repository, CircuitBreakersPanel circuitBreaker) {
+    public DemoServiceImpl(Repository repository, CircuitBreakersPanel circuitBreakerPanel) {
         this.repository = repository;
-        this.circuitBreaker = circuitBreaker;
+        this.circuitBreakerPanel = circuitBreakerPanel;
     }
     
     @Override
     public ServiceCall<NotUsed, String> getHelloOrFail(String userName) {
-        return request -> circuitBreaker.withCircuitBreaker("breakerA",
-                () -> CompletableFuture.completedFuture(repository.getSomethingRandom(userName)));
+        return request -> circuitBreakerPanel.withCircuitBreaker("breakerA",
+                () -> repository.getSomethingRandom(userName));
     }
 }
