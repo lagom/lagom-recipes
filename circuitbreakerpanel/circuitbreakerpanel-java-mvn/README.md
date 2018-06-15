@@ -12,7 +12,9 @@ In a real scenario this repository will be interacting with a persistence layer.
 
 
 
-### How to run
+##Testing the recipe
+
+To start the service:
 
 ```
 mvn lagom:runAll
@@ -22,16 +24,15 @@ characters in length.
 e.g
 ```
 curl http://localhost:9000/random/i_am_going_home_now_because_i_am_sleepy
-
 ```
-Hitting the service with above 3 times and the circuitbreaker goes into an open state.
+Hitting the service with above 3 times and the circuitbreaker goes into an open state, when this happens you will
+see the CircuitBreakerOpen exception which indicates calls are failing fast.
 
 But if you hit the service with a parameter of size one , even though the repository throws an exception, the failure
 won't add towards the circuitbreakers open state.
 e.g.
 ```
 curl http://localhost:9000/random/i
-
 ```
 
 
