@@ -1,7 +1,7 @@
-#CircuitBreakerPanel recipe for lagom with java
+# CircuitBreakerPanel recipe for Lagom with Java
 
 
-##Implementation details
+## Implementation details
 The circuitbreakerpanel-impl/src/main/resources/application.conf contains configuration for your circuitbreaker:
 
 This configuration is specified in detail in the [`lagom documentation`](https://www.lagomframework.com/documentation/1.4.x/java/ServiceClients.html#Circuit-Breaker-Configuration)
@@ -12,7 +12,7 @@ In a real scenario this repository will be interacting with a persistence layer.
 
 
 
-##Testing the recipe
+## Testing the recipe
 
 To start the service:
 
