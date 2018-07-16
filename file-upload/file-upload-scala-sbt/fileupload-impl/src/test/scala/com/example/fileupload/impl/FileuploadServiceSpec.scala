@@ -40,6 +40,14 @@ class FileUploadServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAf
       }
 
     }
+
+    "respond to cluster management request under /cluster/members" in {
+      val eventualResponse = ws
+          .url(server.playServer.httpPort.map { port => s"http://localhost:$port/cluster/members" }.get)
+          .get()
+      eventualResponse.map{ _.status shouldBe 200 }
+    }
+
     "handle file uploads " in {
 
       // Create a java.nio.file.Path to the file we want to upload
@@ -62,7 +70,7 @@ class FileUploadServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAf
 
       val eventualResponse =
         ws
-          .url(server.playServer.httpPort.map { port => s"http://localhost:$port/api/files" }.get)
+          .url(server.playServer.httpPort.map { port => s"http://localhost:$port/io/api/files" }.get)
           .post(Source(multipartFormParts))
 
 
