@@ -1,3 +1,7 @@
 .idea
 target/
 bin/
+logs
+*.iml
+*.ipr
+*.iws
