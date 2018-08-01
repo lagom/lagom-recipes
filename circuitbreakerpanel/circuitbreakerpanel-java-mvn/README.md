@@ -5,7 +5,7 @@ Instead of wasting resources on a particular part of the service that's failing 
 fail immediately in case a certain dependency of 1 or more of your endpoints is down.
 
 ## Implementation details
-The circuitbreakerpanel-impl/src/main/resources/application.conf contains configuration for your circuitbreaker:
+The [`circuitbreakerpanel-impl/src/main/resources/application.conf`](src/main/resources/application.conf) contains configuration for your circuitbreaker:
 
 This configuration is specified in detail in the [`lagom documentation`](https://www.lagomframework.com/documentation/1.4.x/java/ServiceClients.html#Circuit-Breaker-Configuration)
 
