@@ -1,5 +1,8 @@
 # CircuitBreakerPanel recipe for Lagom with Java
 
+CircuitBreakerPanel can be used for with any arbitrary api to apply the circuit breaker pattern to it.
+Instead of wasting resources on a particular part of the service that's failing you can use the circuit breaker pattern to
+fail immediately in case a certain dependency of 1 or more of your endpoints is down.
 
 ## Implementation details
 The circuitbreakerpanel-impl/src/main/resources/application.conf contains configuration for your circuitbreaker:
