@@ -9,7 +9,7 @@ The [`circuitbreakerpanel-impl/src/main/resources/application.conf`](src/main/re
 
 This configuration is specified in detail in the [`lagom documentation`](https://www.lagomframework.com/documentation/1.4.x/java/ServiceClients.html#Circuit-Breaker-Configuration)
 
-In this sample we use the circuitBreakerPanel in [`DemoServceimpl`](src/main/java/com/lightbend/lagom/recipes/cbpanel/impl/DemoServiceImpl)
+In this sample we use the circuitBreakerPanel in [`DemoServceimpl`](src/main/java/com/lightbend/lagom/recipes/cbpanel/impl/DemoServiceImpl/DemoServiceImpl)
 when invoking our repository layer.
 In a real scenario this repository will be interacting with a persistence layer.
 
