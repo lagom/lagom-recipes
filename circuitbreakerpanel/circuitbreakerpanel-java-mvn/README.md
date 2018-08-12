@@ -32,7 +32,8 @@ Hitting the service with above 3 times and the circuitbreaker goes into an open 
 see the CircuitBreakerOpen exception which indicates calls are failing fast.
 
 But if you hit the service with a value in greater that 100 , even though the userRepository throws an exception, the failure
-won't add towards the circuitbreakers open state.
+won't add towards the circuitbreakers open state. For values greater than 100 we are simulating a scenario where the user
+does not exist in the database and hence it would not make sense to open the circuitbreaker for a situation like this.
 e.g.
 ```
 curl http://localhost:9000/user/1
