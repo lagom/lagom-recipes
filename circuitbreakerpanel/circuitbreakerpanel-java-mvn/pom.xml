@@ -7,7 +7,7 @@
   <groupId>com.lightbend.lagom.recipes</groupId>
   <artifactId>circuitbreakerpanel</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
 
   <modules>
     <module>circuitbreakerpanel-api</module>

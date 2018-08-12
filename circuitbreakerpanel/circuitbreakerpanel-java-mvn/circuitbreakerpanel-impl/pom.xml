@@ -4,7 +4,7 @@
   <parent>
     <artifactId>circuitbreakerpanel</artifactId>
     <groupId>com.lightbend.lagom.recipes</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>circuitbreakerpanel-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
