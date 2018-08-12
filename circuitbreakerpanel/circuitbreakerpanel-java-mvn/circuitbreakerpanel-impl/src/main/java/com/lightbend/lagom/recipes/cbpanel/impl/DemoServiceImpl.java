@@ -31,7 +31,7 @@ public class DemoServiceImpl implements DemoService {
     @Override
     public ServiceCall<NotUsed, User> getUser(Integer userId) {
 
-        return request -> circuitBreakerPanel.withCircuitBreaker("breakerA",
+        return request -> circuitBreakerPanel.withCircuitBreaker("user-repository-breaker",
                 () -> userRepository.getUser(userId));
     }
 }

@@ -14,7 +14,7 @@ public class UserRepository {
             return CompletableFuture
                     .completedFuture(new User(String.format("User-%d", userId), userId, STANDARD_LOCATION));
         
-        } else if (userId > 100) {
+        } else if (userId >= 100) {
             
             throw new UserNotFoundException("Could not locate the requested user");
         
