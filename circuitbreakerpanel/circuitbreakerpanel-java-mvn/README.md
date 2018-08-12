@@ -10,8 +10,8 @@ The [`circuitbreakerpanel-impl/src/main/resources/application.conf`](circuitbrea
 This configuration is specified in detail in the [`lagom documentation`](https://www.lagomframework.com/documentation/1.4.x/java/ServiceClients.html#Circuit-Breaker-Configuration)
 
 In this sample we use the `CircuitBreakerPanel` in [`DemoServceimpl`](circuitbreakerpanel-impl/src/main/java/com/lightbend/lagom/recipes/cbpanel/impl/DemoServiceImpl.java)
-when invoking our repository layer.
-In a real scenario this repository will be interacting with a persistence layer.
+when invoking our userRepository layer.
+In a real scenario this userRepository will be interacting with a persistence layer.
 
 
 
@@ -24,14 +24,14 @@ mvn lagom:runAll
 ```
 To push the CircuitBreaker into an open state just hit the service with a path parameter which is larger than 20 
 characters in length.
-e.g
+e.g.
 ```
-curl http://localhost:9000/random/i_am_going_home_now_because_i_am_sleepy
+curl http://localhost:9000/user/-1
 ```
 Hitting the service with above 3 times and the circuitbreaker goes into an open state, when this happens you will
 see the CircuitBreakerOpen exception which indicates calls are failing fast.
 
-But if you hit the service with a parameter of size one , even though the repository throws an exception, the failure
+But if you hit the service with a parameter of size one , even though the userRepository throws an exception, the failure
 won't add towards the circuitbreakers open state.
 e.g.
 ```

@@ -11,13 +11,13 @@ import static com.lightbend.lagom.javadsl.api.transport.Method.GET;
 
 public interface DemoService extends Service {
     
-    ServiceCall<NotUsed, String> getHelloOrFail(String userName);
+    ServiceCall<NotUsed, User> getUser(Integer userId);
     
     @Override
     default Descriptor descriptor() {
         return named("circuit-breaker-demo")
                 .withCalls(
-                        restCall(GET, "/random/:name", this::getHelloOrFail)
+                        restCall(GET, "/user/:userId", this::getUser)
                 ).withAutoAcl(true);
     }
 }

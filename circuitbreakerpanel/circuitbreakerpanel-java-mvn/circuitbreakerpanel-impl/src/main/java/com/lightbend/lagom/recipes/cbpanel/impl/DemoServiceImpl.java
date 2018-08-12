@@ -4,19 +4,20 @@ import akka.NotUsed;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 import com.lightbend.lagom.javadsl.client.CircuitBreakersPanel;
 import com.lightbend.lagom.recipes.cbpanel.api.DemoService;
-import com.lightbend.lagom.recipes.cbpanel.impl.repository.Repository;
+import com.lightbend.lagom.recipes.cbpanel.api.User;
+import com.lightbend.lagom.recipes.cbpanel.impl.repository.UserRepository;
 
 import javax.inject.Inject;
 
 public class DemoServiceImpl implements DemoService {
     
-    private Repository repository;
+    private UserRepository userRepository;
     
     private CircuitBreakersPanel circuitBreakerPanel;
     
     @Inject
-    public DemoServiceImpl(Repository repository, CircuitBreakersPanel circuitBreakerPanel) {
-        this.repository = repository;
+    public DemoServiceImpl(UserRepository userRepository, CircuitBreakersPanel circuitBreakerPanel) {
+        this.userRepository = userRepository;
         this.circuitBreakerPanel = circuitBreakerPanel;
     }
     
@@ -28,9 +29,9 @@ public class DemoServiceImpl implements DemoService {
      * external service
      */
     @Override
-    public ServiceCall<NotUsed, String> getHelloOrFail(String userName) {
+    public ServiceCall<NotUsed, User> getUser(Integer userId) {
 
         return request -> circuitBreakerPanel.withCircuitBreaker("breakerA",
-                () -> repository.getSomethingRandom(userName));
+                () -> userRepository.getUser(userId));
     }
 }
