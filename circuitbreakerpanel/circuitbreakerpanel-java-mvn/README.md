@@ -22,8 +22,8 @@ To start the service:
 ```
 mvn lagom:runAll
 ```
-To push the CircuitBreaker into an open state just hit the service with a path parameter which is larger than 20 
-characters in length.
+To push the CircuitBreaker into an open state just hit the service with a user id which is negative. 
+This is used to simulate a situation where the database that the repository interacts with is down.
 e.g.
 ```
 curl http://localhost:9000/user/-1
@@ -31,11 +31,11 @@ curl http://localhost:9000/user/-1
 Hitting the service with above 3 times and the circuitbreaker goes into an open state, when this happens you will
 see the CircuitBreakerOpen exception which indicates calls are failing fast.
 
-But if you hit the service with a parameter of size one , even though the userRepository throws an exception, the failure
+But if you hit the service with a value in greater that 100 , even though the userRepository throws an exception, the failure
 won't add towards the circuitbreakers open state.
 e.g.
 ```
-curl http://localhost:9000/random/i
+curl http://localhost:9000/user/1
 ```
 
 
