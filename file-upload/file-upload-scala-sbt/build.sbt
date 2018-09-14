@@ -26,7 +26,10 @@ lazy val `fileupload-impl` = (project in file("fileupload-impl"))
   .settings(
     libraryDependencies ++= Seq(
       lagomScaladslTestKit,
+      lagomScaladslCluster,
       macwire,
+      "com.lightbend.akka.management" %% "akka-management"              % "0.15.0",
+      "com.lightbend.akka.management" %% "akka-management-cluster-http" % "0.15.0",
       scalaTest
     )
   )

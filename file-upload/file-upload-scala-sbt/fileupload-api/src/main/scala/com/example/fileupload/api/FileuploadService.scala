@@ -23,8 +23,10 @@ trait FileUploadService extends Service {
         pathCall("/api/echo", uppercaseEcho _)
       )
       .withAcls(
-        ServiceAcl(pathRegex = Some("/api/echo")),
-        ServiceAcl(pathRegex = Some("/api/files"))
+        ServiceAcl.forPathRegex("/api/echo"),
+        ServiceAcl.forPathRegex("/api/files"),
+        ServiceAcl.forPathRegex("/cluster/members*"),
+        ServiceAcl.forPathRegex("/cluster/shards*")
       )
   }
 }
