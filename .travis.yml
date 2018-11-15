@@ -7,20 +7,21 @@ jdk:
 env:
   matrix:
     - SCRIPT="bin/runSbtJob consumer-service/consumer-service-java-sbt test"
-    - SCRIPT="bin/runJob consumer-service/consumer-service-java-sbt test"
-    - SCRIPT="bin/runJob cors/cors-java test"
-    - SCRIPT="bin/runJob cors/cors-scala test"
-    - SCRIPT="bin/runJob file-download/file-download-scala-sbt test"
-    - SCRIPT="bin/runJob file-upload/file-upload-scala-sbt test"
-    - SCRIPT="bin/runJob file-upload/file-upload-java-sbt test"
-    - SCRIPT="bin/runJob http-header-handling/http-header-handling-java-sbt test"
-    - SCRIPT="bin/runJob mixed-persistence/mixed-persistence-java-sbt test"
-    - SCRIPT="bin/runJob mixed-persistence/mixed-persistence-scala-sbt test"
+    - SCRIPT="bin/runSbtJob consumer-service/consumer-service-java-sbt test"
+    - SCRIPT="bin/runSbtJob cors/cors-java test"
+    - SCRIPT="bin/runSbtJob cors/cors-scala test"
+    - SCRIPT="bin/runSbtJob file-download/file-download-scala-sbt test"
+    - SCRIPT="bin/runSbtJob file-upload/file-upload-scala-sbt test"
+    - SCRIPT="bin/runSbtJob file-upload/file-upload-java-sbt test"
+    - SCRIPT="bin/runSbtJob http-header-handling/http-header-handling-java-sbt test"
+    - SCRIPT="bin/runSbtJob mixed-persistence/mixed-persistence-java-sbt test"
+    - SCRIPT="bin/runSbtJob mixed-persistence/mixed-persistence-scala-sbt test"
     - SCRIPT="mvn -f circuitbreakerpanel/circuitbreakerpanel-java-mvn test"
     - SCRIPT="mvn -f i18n/hello-i18n-java-mvn test"
     - SCRIPT="mvn -f kubernetes-deployment/hello-kubernetes-java-mvn test"
-    - SCRIPT="mvn -f lightbend-telemetry/lightbend-telemetry-java-mvn test"
-    - SCRIPT="mvn -f lightbend-telemetry/log-correlation-java-mvn test"
+    # can't run telemetry recipes on travis
+    #- SCRIPT="mvn -f lightbend-telemetry/lightbend-telemetry-java-mvn test"
+    #- SCRIPT="mvn -f lightbend-telemetry/log-correlation-java-mvn test"
 script: $SCRIPT
 before_install:
     # See https://github.com/travis-ci/travis-ci/issues/4629#issuecomment-239493916
