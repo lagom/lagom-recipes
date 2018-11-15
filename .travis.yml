@@ -6,9 +6,9 @@ jdk:
   - oraclejdk8
 env:
   matrix:
-    - SCRIPT="runSbtJob consumer-service/consumer-service-java-sbt test"
+    - SCRIPT="bin/runSbtJob consumer-service/consumer-service-java-sbt test"
     - SCRIPT="mvn -f i18n/hello-i18n-java-mvn/pom.xml test"
-script: bin/$SCRIPT
+script: $SCRIPT
 before_install:
     # See https://github.com/travis-ci/travis-ci/issues/4629#issuecomment-239493916
     - rm ~/.m2/settings.xml
