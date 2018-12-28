@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+        http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd" version="2.2">
+    <persistence-unit-metadata>
+        <xml-mapping-metadata-complete/>
+    </persistence-unit-metadata>
+    <entity class="com.example.jpacrud.domain.model.Entity">
+        <table name="ENTITY"/>
+        <attributes>
+            <id name="id"/>
+            <basic name="property">
+                <column nullable="false" length="100"/>
+            </basic>
+            <element-collection name="parts" fetch="EAGER">
+                <collection-table name="ENTITY_PART">
+                    <join-column name="ENTITY_ID"/>
+                </collection-table>
+            </element-collection>
+        </attributes>
+    </entity>
+    <embeddable class="com.example.jpacrud.domain.model.Part">
+        <attributes>
+            <basic name="name">
+                <column nullable="true" length="100"/>
+            </basic>
+        </attributes>
+    </embeddable>
+</entity-mappings>
