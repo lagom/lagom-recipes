@@ -7,6 +7,13 @@ for implement Lagom service with CRUD-oriented persistence.
 
 Service implement CRUD operation for entity `Entity`.
 
+_**NOTE**: You should always use a custom execution context when using JPA, 
+to ensure that Lagom thread pool is completely focused on processing requests and not blocked by JDBC operations.
+You can use CustomExecutionContext class to configure a custom execution context dedicated to serving JDBC operations.
+See [Play documentation](https://www.playframework.com/documentation/2.7.x/JavaJPA) for more details._
+
+Also, this service use [external library](https://github.com/taymyr/play-repository-java) implement DDD Repository pattern for Play/Lagom.
+
 ## Testing the recipe
 
 #### unit tests
