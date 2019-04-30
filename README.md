@@ -1,4 +1,9 @@
 <!--- Copyright (C) 2016-2018 Lightbend Inc. <https://www.lightbend.com> -->
+
+# WARNING!!
+
+The `lagom-recipes` repository is archived. It's contents have been moved to https://github.com/lagom/lagom-samples.
+
 # Lagom Recipes
 
 [Lagom](https://www.lagomframework.com/) is an [open source](https://github.com/lagom/lagom) framework for building reactive microservice systems in Java or Scala. This repository contains code examples to help you understand how to achieve common goals. In general, code in each folder of this repository tries to answer a question of type "How do I _xyz_ ?". For example: "How do I use RDBMS read-sides with Cassandra write-sides?".
